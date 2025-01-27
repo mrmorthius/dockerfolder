@@ -45,14 +45,19 @@ builder.Services.AddDbContext<TodoApiDbContext>(options =>
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
 
-var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+
+var app = builder.Build();
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var dbContext = scope.ServiceProvider.GetRequiredService<TodoApiDbContext>();
+    dbContext.Database.Migrate();
 }
+// Configure the HTTP request pipeline.
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.MapControllers();

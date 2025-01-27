@@ -1,8 +1,74 @@
-<h1 style="text-align: center; font-family: 'Courier New', Courier, monospace">
-  Gjøremål
-</h1>
+<style>
+  * {
+    font-family: "Courier New", Courier, monospace;
+  }
+</style>
+<h1 style="text-align: center">Gjøremål</h1>
 
-<div id="content" style="display: flex; justify-content: center"></div>
+<!-- Lage ny oppgave -->
+<div
+  id="create-content"
+  style="display: flex; justify-content: center; margin: 2rem"
+>
+  <form
+    style="
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1rem;
+      min-width: 500px;
+      max-width: 800px;
+      background-color: #f1f1f1;
+      padding: 2rem;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    "
+  >
+    <label for="title" style="align-self: center">Oppgave</label>
+    <input
+      type="text"
+      id="title"
+      name="title"
+      style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px"
+    />
+
+    <label for="description" style="align-self: center">Beskrivelse</label>
+    <input
+      type="text"
+      id="description"
+      name="description"
+      style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px"
+    />
+
+    <button
+      type="button"
+      style="
+        grid-column: 1 / -1;
+        padding: 0.5rem 1rem;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 1rem;
+      "
+      onclick="createTodo()"
+    >
+      Opprett
+    </button>
+  </form>
+</div>
+
+<!-- Liste med gjøremål -->
+<div
+  id="content"
+  style="
+    display: flex;
+    flex: 0 1 calc(33.333% - 2rem);
+    flex-wrap: wrap;
+    justify-content: center;
+  "
+></div>
 <script>
   async function getTodos() {
     const response = await fetch("http://localhost:5160/api/todos");
@@ -10,25 +76,87 @@
     return todos;
   }
 
-  window.addEventListener("load", (event) => {
-    getTodos().then((todos) => {
-      const content = document.getElementById("content");
-      content.innerHTML = todos
-        .map(
-          (todo) => `
-        <div style="display:inline-flex;background-color:#f1f1f1;padding:1rem;margin:1rem;border-radius:5px;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);gap:2em;">
-            <div style="display:flex;flex-direction:column;">
-                <div style="display:flex;">
-                    <p style="font-weight: bold;">Oppgave: </p><p>${todo.title}</p>
+  async function createTodo() {
+    try {
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+      const todo = { title, description };
+
+      await fetch("http://localhost:5160/api/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(todo),
+      });
+
+      await updateTodoDisplay();
+
+      document.getElementById("title").value = "";
+      document.getElementById("description").value = "";
+    } catch (error) {
+      console.error("Error creating todo:", error);
+    }
+  }
+
+  async function editTodo(id, title, description) {
+    try {
+      const todo = { title, description };
+
+      await fetch("http://localhost:5160/api/todos/" + id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(todo),
+      });
+
+      await updateTodoDisplay();
+    } catch (error) {
+      console.error("Error creating todo:", error);
+    }
+  }
+
+  async function updateTodoDisplay() {
+    const content = document.getElementById("content");
+    const todos = await getTodos();
+
+    content.innerHTML = todos
+      .map(
+        (todo) => `
+            <div style="display:inline-flex;justify-content:space-between;width: 30%;background-color:#f1f1f1;padding:1rem;margin:1rem;border-radius:5px;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);gap:2em;">
+                <div style="display:flex;flex-direction:column;">
+                    <div style="display:flex;">
+                        <p style="font-weight: bold;">Oppgave: </p><p>${todo.title}</p>
+                    </div>
+                    <div style="display:flex;">
+                        <p style="font-weight: bold;">Beskrivelse: </p><p>${todo.description}</p>
+                    </div>
                 </div>
-                <div style="display:flex;">
-                    <p style="font-weight: bold;">Beskrivelse: </p><p>${todo.description}</p>
+                <div style="display:flex;flex-direction:column; gap:1em">
+                    <button style="border-radius:5px;border:none;cursor:pointer;background-color:red;color:white;height:2em;justify-self:flex-end;" 
+                        onclick="deleteTodo(${todo.id})">Slett</button>
+                    <button style="border-radius:5px;border:none;cursor:pointer;background-color:#1e8b99;color:white;height:2em;justify-self:flex-end;" 
+                        onclick="editTodo(${todo.id}, ${todo.title}, ${todo.description})">Rediger</button>
                 </div>
             </div>
-            <button style="border-radius:5px;border:none;cursor:pointer;background-color:red;color:white;height:2em;" onclick="deleteTodo(${todo.id})">Slett</button>
-        </div>`
-        )
-        .join("");
-    });
-  });
+        `
+      )
+      .join("");
+  }
+
+  // Laster inn gjøremål
+  document.addEventListener("DOMContentLoaded", updateTodoDisplay);
+
+  deleteTodo = (id) => {
+    fetch(`http://localhost:5160/api/todos/${id}`, {
+      method: "DELETE",
+    })
+      .then(() => {
+        this.updateTodoDisplay();
+      })
+      .catch((error) => {
+        console.error("Error deleting todo:", error);
+      });
+  };
 </script>

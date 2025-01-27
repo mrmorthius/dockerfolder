@@ -1,0 +1,36 @@
+services:
+  mysql-db:
+    image: morthius/db:latest
+    networks:
+      - todo-network
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+  frontend:
+    image: morthius/frontend:latest
+    networks:
+      - todo-network
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    image: morthius/backend:latest
+    networks:
+      - todo-network
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    command: sh -c "dotnet ef database update && dotnet backend.dll"
+
+volumes:
+  mysql-data:
+
+networks:
+  todo-network:
