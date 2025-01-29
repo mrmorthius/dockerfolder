@@ -1,6 +1,11 @@
 services:
   mysql-db:
     image: morthius/db:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=todos
+      - MYSQL_USER=todo_user
+      - MYSQL_PASSWORD=todo_password
     networks:
       - todo-network
     volumes:
