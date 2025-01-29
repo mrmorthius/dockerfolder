@@ -1,4 +1,4 @@
-FROM mysql:latest
+FROM --platform=$BUILDPLATFORM mysql:latest
 
 WORKDIR /app
 ADD . /app
