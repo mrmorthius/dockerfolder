@@ -10,7 +10,7 @@ Prosjektet består av tre images som er bygget på min Mac (Apple Silicon). Imag
 
 Vi bruker `docker compose` for å kjøre imagene samtidig og for å definere avhengighetene og tilknytningene mellom dem.
 
-I `docker-compose` opprettes det et nettverk `todo-network` som de ulike tjenestene er tilknyttet slik at de kan kommunisere i mellom seg. Så lenge de er på samme nettverk kan de nå hverandre gjennom navnet til de ulike tjenestene.
+I `docker-compose` opprettes det et nettverk `todo-network` som de ulike tjenestene er tilknyttet slik at de kan kommunisere i mellom seg. Så lenge de er på samme nettverk kan de nå hverandre gjennom navnet til de ulike servicene.
 
 I tilknytning til databasen opprettes det også et volum i `docker-compose` slik at endringer i databasen ikke fjernes ved avslutning av tjenesten.
 
