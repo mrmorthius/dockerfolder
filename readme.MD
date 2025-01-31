@@ -18,7 +18,7 @@ I tilknytning til databasen opprettes det også et volum i `docker-compose` slik
 
 ### Frontend
 
-Frontend er laget basert på `nginx:alpine` med tilpasset konfigurasjonsfil _nginx.conf_ som videresender forespørsler til `Swagger` på adresse `/swagger/index.html` som kjøres på backend-tjesten.
+Frontend er laget basert på `nginx:alpine` med tilpasset konfigurasjonsfil _nginx.conf_ som videresender forespørsler til `Swagger` på adresse `/swagger/index.html` som kjøres på backend-tjenesten.
 
 I fil `docker-compose` setter vi tilgjengeligheten til frontend på port 80, og det er ingen av de to andre imagene som får eksponert port ut av docker-nettverket. Derfor vil ikke forsøk på å gå direkte til `swagger` på backend (port 5160/swagger/index.html) gå igjennom.
 
