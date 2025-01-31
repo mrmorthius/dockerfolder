@@ -1,10 +1,18 @@
 # Arbeidskrav Docker - Morten Hansen
 
+## GitHub
+
 Grunnlaget for prosjektet finnes på [GitHub](https://github.com/mrmorthius/dockerfolder).
 
-Tjenesten består av tre images som er bygget på min Mac (Apple Silicon). Images er bygget for å fungere på ulike plattformer og lastet opp til mitt repository på [DockerHub](https://hub.docker.com/u/morthius).
+## Om prosjektet
 
-I `docker-compose` opprettes det et nettverk `todo-network` som de ulike tjenestene er tilknyttet slik at de kan kommunisere i mellom seg.
+Prosjektet består av tre images som er bygget på min Mac (Apple Silicon). Images er bygget for å fungere på ulike plattformer og lastet opp til mitt repository på [DockerHub](https://hub.docker.com/u/morthius).
+
+Vi bruker `docker compose` for å kjøre imagene samtidig og for å definere avhengighetene og tilknytningene mellom dem.
+
+I `docker-compose` opprettes det et nettverk `todo-network` som de ulike tjenestene er tilknyttet slik at de kan kommunisere i mellom seg. Så lenge de er på samme nettverk kan de nå hverandre gjennom navnet til de ulike tjenestene.
+
+I tilknytning til databasen opprettes det også et volum i `docker-compose` slik at endringer i databasen ikke fjernes ved avslutning av tjenesten.
 
 ## Images
 
@@ -40,8 +48,6 @@ Backend når databasen ved å bruke navnet på service _mysql-db_ som er satt op
 ### Db - database
 
 Databasen er av typen MYSQL og imaget er basert på `mysql:latest`. Miljøvariabler er definert i `docker-compose.yml` slik at dette blir korrekt når databasen settes opp og når `backend` kobler seg til for å interagere med databasen.
-
-I tilknytning til databasen opprettes det også et volum i `docker-compose` slik at endringer i databasen ikke fjernes ved avslutning av tjenesten.
 
 ## Start tjenesten
 
