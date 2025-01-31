@@ -22,7 +22,7 @@ Frontend er laget basert på `nginx:alpine` med tilpasset konfigurasjonsfil _ngi
 
 I fil `docker-compose` setter vi tilgjengeligheten til frontend på port 80, og det er ingen av de to andre imagene som får eksponert port ut av docker-nettverket. Derfor vil ikke forsøk på å gå direkte til `swagger` på backend (port 5160/swagger/index.html) gå igjennom.
 
-Ved å bruke frontend vil man ha tilgang til `swagger GUI` og mulighet for å nå API-endepunktene. Endepunktene kan også nås gjennom adressen ` localhost:80/api/todos` slik at POSTMAN/cURL eller lignende kan brukes mot API-et, med bruk av CRUD-operasjoner.
+Ved å bruke frontend vil man ha tilgang til `swagger GUI` og mulighet for å nå API-endepunktene. Endepunktene kan også nås gjennom adressen `localhost:80/api/todos` slik at POSTMAN/cURL eller lignende kan brukes mot API-et, med bruk av CRUD-operasjoner.
 
 #### CRUD operasjoner
 
