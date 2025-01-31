@@ -2,11 +2,11 @@
 
 Grunnlaget for prosjektet finnes på [GitHub](https://github.com/mrmorthius/dockerfolder).
 
-## Images
-
 Tjenesten består av tre images som er bygget på min Mac (Apple Silicon). Images er bygget for å fungere på ulike plattformer og lastet opp til mitt repository på [DockerHub](https://hub.docker.com/u/morthius).
 
 I `docker-compose` opprettes det et nettverk `todo-network` som de ulike tjenestene er tilknyttet slik at de kan kommunisere i mellom seg.
+
+## Images
 
 ### Frontend
 
